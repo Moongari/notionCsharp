@@ -6,9 +6,12 @@ namespace CslLinq
 {
     internal class Program
     {
+
+        public delegate void delSuperieur(Personne p);
         static void Main(string[] args)
         {
 
+            
             IList<Personne> personnlist = new List<Personne>();
 
             personnlist.Add(new Personne("Robert", 13, "Oxford", "England"));
@@ -20,60 +23,22 @@ namespace CslLinq
             personnlist.Add(new Personne("Francoise", 78, "Bouzole", "France"));
 
 
+            Personne p = new Personne("Robert", 23, "Oxford", "England");
+            
 
-            var resultPersonn = from personn in personnlist
-                                orderby personn.name ascending
-                                select personn;
+            // declaration du delegate
+            delSuperieur delSuperieur = new delSuperieur(p.isBiggerOfPersonne);
+            // on recupere la liste des personnes dont l'age est superieur a 0
+            var listPers =  personnlist.Where(p => p.age > 0).ToList();
 
-            // tri par nom
-            foreach (var p in resultPersonn)
+            foreach (Personne p1 in listPers)
             {
-                Console.WriteLine(p.name + " - " + p.age + " ans");
+                delSuperieur(p1);
+                
             }
+          
 
 
-
-            var resultPersonn2 = personnlist.OrderBy(personn => personn.age);
-
-            Console.WriteLine("---------------------------------------------------");
-            //tri par age croissant
-            foreach (var item in resultPersonn2)
-            {
-                Console.WriteLine(item.name + " - " + item.age + " ans");
-            }
-
-
-            Console.WriteLine("---------------------------------------------------");
-
-            // affiche les personnes qui habitent en Angleterre.
-            var resultPersonn3 = personnlist.Where(personn => personn.country == "England");
-
-            resultPersonn3.ToList().ForEach(personn => personn.afficher());
-
-            Console.WriteLine("---------------------------------------------------");
-
-            var resultPersonn4 = personnlist.Where(p => p.city.StartsWith("P") && p.age >10);
-
-
-            resultPersonn4.ToList().ForEach(personn => personn.afficher());
-
-
-
-
-            Console.WriteLine("---------------------------------------------------");
-
-            // la fonction ToLookup permet de créer des groupes 
-            //on peut ensuite repartir ces groupes en fonction d'un criteres bien definit ici la ville
-            var result = personnlist.ToLookup(p => p.city);
-
-            foreach (var category in result)
-            {
-                Console.WriteLine(string.Format(" City : {0}", category.Key));
-                foreach (var item in category)
-                {
-                    Console.WriteLine(string.Format("\t Name :{0} | age : {1} ",item.name,item.age));
-                }
-            }
         }
 
     }
