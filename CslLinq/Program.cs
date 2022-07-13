@@ -8,6 +8,7 @@ namespace CslLinq
     {
 
         public delegate void delSuperieur(Personne p);
+    
         static void Main(string[] args)
         {
 
@@ -21,20 +22,22 @@ namespace CslLinq
             personnlist.Add(new Personne("Brahim", 36, "Dammarie les lys", "France"));
             personnlist.Add(new Personne("Ismail", 9, "Dubai", "Dubai"));
             personnlist.Add(new Personne("Francoise", 78, "Bouzole", "France"));
-
+            personnlist.Add(new Personne("Mohamed", 45, "Damparis", "France"));
 
             Personne p = new Personne("Robert", 23, "Oxford", "England");
-            
 
-            // declaration du delegate
+            //Delegate Action....
+            Action<Personne> delSuperieurAction = p.isBiggerOfPersonne;
+
+           // declaration du delegate
             delSuperieur delSuperieur = new delSuperieur(p.isBiggerOfPersonne);
             // on recupere la liste des personnes dont l'age est superieur a 0
             var listPers =  personnlist.Where(p => p.age > 0).ToList();
 
             foreach (Personne p1 in listPers)
             {
-                delSuperieur(p1);
-                
+                //delSuperieur(p1);
+                delSuperieurAction(p1);
             }
           
 
