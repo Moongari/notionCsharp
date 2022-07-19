@@ -8,6 +8,7 @@ namespace CslLinq
     {
 
         public delegate void delSuperieur(Personne p);
+        public delegate void delquestionUser(string message);
     
         static void Main(string[] args)
         {
@@ -39,8 +40,27 @@ namespace CslLinq
                 //delSuperieur(p1);
                 delSuperieurAction(p1);
             }
-          
 
+
+            delquestionUser delquestionUser = questionUtilisateur;
+            delquestionUser("Veuillez indiquer votre nom ?");
+
+
+        }
+
+
+
+
+        static public void questionUtilisateur(string message)
+        {
+
+            Console.WriteLine(message);
+            var result = Console.ReadLine();
+
+            if (result != null)
+            {
+                Console.WriteLine($"votre nom est : {result}");
+            }
 
         }
 

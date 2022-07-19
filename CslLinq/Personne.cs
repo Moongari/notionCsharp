@@ -43,8 +43,23 @@ namespace CslLinq
                     Console.WriteLine($"{p.name} : Autorisation refusée");
                 }
 
-            
+          
             }
+        }
+
+        public Personne compareAgePersonne(Personne p1, Personne p2)
+        { 
+        
+             if(p1!= null && p2!= null)
+            {
+               if(p1.age > p2.age)
+                {
+                    return p1;
+                }
+            }
+
+             return null;
+        
         }
 
     }
