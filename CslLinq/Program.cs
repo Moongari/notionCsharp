@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
+using System.Net.Http;
 using System.Threading.Tasks;
 
 namespace CslLinq
@@ -14,44 +15,44 @@ namespace CslLinq
         public delegate void delquestionUser(string message);
         static Random rnd = new Random();
 
-        static async Task Main(string[] args)
-        {
-       
-            var affiche = compteur();
-            
-            Console.WriteLine("Demarrage des operations...");
-            await operation();
+        private const string URL = "https://www.c-sharpcorner.com/";
 
-            Console.WriteLine("Fin du programme");
+        static void Main(string[] args)
+        {
+            DoingSynchronous();
+            var MultiTask = MultipleTasksAsync();
+            DoingSynchronousAfterAwait();
+            MultiTask.Wait();
+            Console.ReadLine();
+        }
+        public static void DoingSynchronous()
+        {
+            Console.WriteLine("Starting a program");
         }
 
-
-
-        static async Task compteur()
+        static async Task MultipleTasksAsync()
         {
-            while (true)
-            {
-                await Task.Delay(500);
-                Console.Write(".");
-            }
-           
+            Console.WriteLine("Doing Multiple tasks at a time ");
+            await GetURLAsync();
         }
 
-
-        static async Task operation()
+        static async Task GetURLAsync()
         {
-            
-            int result = 0;
-            
-            for (int i = 0; i < 10; i++)
+            using (var httpClient = new HttpClient())
             {
-                var valeur = rnd.Next(10, 100);
-                await Task.Delay(1000);
-                result = valeur + valeur;
-                Console.Write(result);
+                Console.WriteLine("Waiting for GetURLAsync to happen");
+                string output = await httpClient.GetStringAsync(URL);
+                Console.WriteLine($"\n OK! awaiting has finished \n The length of {URL} is {output.Length} characters");
+            }
+        }
+        static void DoingSynchronousAfterAwait()
+        {
+            Console.WriteLine("Mean While I'm doing some other work");
+            for (var i = 0; i <= 10; i++)
+            {
+                Console.Write("I'm Updating the Weather Info \t");
             }
 
-            
         }
     }
 }
