@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
+using System.Threading.Tasks;
 
 namespace CslLinq
 {
@@ -11,35 +12,46 @@ namespace CslLinq
 
         public delegate void delSuperieur(Personne p);
         public delegate void delquestionUser(string message);
+        static Random rnd = new Random();
 
-        static void Main(string[] args)
+        static async Task Main(string[] args)
         {
-
-            // fonction synchrone
-
-            var webClient = new WebClient();
-            Console.WriteLine("Telechargement.....");
-            string url = "https://sm.mashable.com/mashable_in/seo/2/24308/24308_tz9f.jpg";
-            //webClient.DownloadFile(url, "pierre.jpg");
-        
-
-            webClient.DownloadFileCompleted += WebClient_DownloadFileCompleted;
-            webClient.DownloadFileAsync(new Uri(url), "24308_tz9f.jpg");
-
-            while (true)
-            {
-                if (isOk) { break; }
-            }
+       
+            var affiche = compteur();
+            
+            Console.WriteLine("Demarrage des operations...");
+            await operation();
 
             Console.WriteLine("Fin du programme");
         }
 
-        private static void WebClient_DownloadFileCompleted(object sender, System.ComponentModel.AsyncCompletedEventArgs e)
+
+
+        static async Task compteur()
+        {
+            while (true)
+            {
+                await Task.Delay(500);
+                Console.Write(".");
+            }
+           
+        }
+
+
+        static async Task operation()
         {
             
-            Console.WriteLine("Telechargement terminé");
-            isOk = true;
+            int result = 0;
+            
+            for (int i = 0; i < 10; i++)
+            {
+                var valeur = rnd.Next(10, 100);
+                await Task.Delay(1000);
+                result = valeur + valeur;
+                Console.Write(result);
+            }
 
+            
         }
     }
 }
