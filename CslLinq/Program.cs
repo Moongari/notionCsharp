@@ -29,10 +29,10 @@ namespace CslLinq
         private static StringBuilder sb = new StringBuilder();
         
         private static int tailleEntete = 5;
-        private static int maxColumn = 5;
-        private static string[] tabChaine = new string[maxColumn];
+        private static int maxColumn = 4;
+        private static string[] tabChaine = new string[tailleEntete];
         private static string path = "out";
-        private static string fileName = "RadarInfraction.txt";
+        private static string fileName = "RadarInfraction.csv";
 
 
         static async Task Main(string[] args)
@@ -43,9 +43,11 @@ namespace CslLinq
             //MultiTask.Wait();
           
             await GetUrlAsyncRadarInfraction();
+
+            await writeAndSaveDataInFile();
             //await getNombreOfData();
             endSynchronousMessage();
-            showData();
+            // showData();
             Console.ReadLine();
         }
         public static void startSynchronousMessage()
@@ -160,7 +162,10 @@ namespace CslLinq
 
         }
 
-
+        /// <summary>
+        /// Recupere les données sources depuis l'url opendata
+        /// </summary>
+        /// <returns></returns>
         static async Task GetUrlAsyncRadarInfraction()
         {
             using (var httpClient = new HttpClient())
@@ -168,21 +173,18 @@ namespace CslLinq
                 Console.WriteLine("Waiting for GetURLAsync to happen");
                 string output = await httpClient.GetStringAsync(URL_RadarInfration);
                 entete = new string[tailleEntete];
+                
                 entete = output.Split(',');
+              
 
                 for (int i = 0; i < entete.Length; i++)
                 {
-                    if (i < tailleEntete)
+                    if (i == 0)
                     {
+                        entete = output.Split('\n');
 
-                      
                         tabChaine[i] = entete[i];
-
-                    }
-                    else
-                    {
-                        Task.Delay(10).Wait();
-                        if (i == tailleEntete)
+                        if (i == 0)
                         {
                             
                             sb.AppendJoin(",", tabChaine);
@@ -190,12 +192,24 @@ namespace CslLinq
                             Array.Clear(tabChaine, 0, tabChaine.Length);
                             
                         }
-                       
 
-                        if (compteur < maxColumn)
+                    }
+                    else
+                    {
+                        Task.Delay(10).Wait();
+
+                        entete = entete[i].Split(',');
+
+                        for (int j = 0; j < entete.Length; j++)
                         {
-                            tabChaine[compteur] = entete[i];
+                            if (compteur < maxColumn)
+                            {
+                                tabChaine[compteur] = entete[j];
+
+                            }
                         }
+
+                       
 
                         if (compteur == maxColumn-1)
                         {
@@ -215,7 +229,11 @@ namespace CslLinq
             }
         }
 
-
+        /// <summary>
+        /// ajout la lignes des entetes
+        /// </summary>
+        /// <param name="sb"></param>
+        /// <param name="isMaxEntete"></param>
         static void addEntete(StringBuilder sb, [Optional] bool isMaxEntete)
         {
             if(isMaxEntete == true)
@@ -237,6 +255,12 @@ namespace CslLinq
             sb.Clear();
         }
 
+
+        /// <summary>
+        /// ajoute les données dans la collection data
+        /// </summary>
+        /// <param name="sb"></param>
+        /// <param name="isMaxEntete"></param>
         static void addDataInfraction(StringBuilder sb, [Optional] bool isMaxEntete)
         {
             if (isMaxEntete != true)
@@ -247,7 +271,11 @@ namespace CslLinq
 
         }
 
-        static async Task saveDataInFile()
+
+        /// <summary>
+        /// Sauvegarde du fichier dans le dossier out
+        /// </summary>
+        static void  saveDataInFile()
         {
             var pathAndFileName = Path.Combine(path, fileName);
 
@@ -255,18 +283,63 @@ namespace CslLinq
             {
                 Directory.CreateDirectory(path);
                 Console.WriteLine("creation du répertoire");
-                if (File.Exists(pathAndFileName))
+                if (!File.Exists(pathAndFileName))
                 {
-                    Console.WriteLine("Le fichier existe déja, on ecrase le contenu");
+                    Console.WriteLine($"Création du fichier  {fileName} ");
 
+                    using (var fileStream = File.CreateText(pathAndFileName))
+                    {
+                        var infoData = from d in data select d;
+                        foreach (var item in infoData)
+                        {
+                            fileStream.WriteLine(item.ToString());
+                             pendingWriteFile().Wait();
+                        }
+                       
+                    }
 
                 }
+            }
+            else
+            {
+                if (File.Exists(pathAndFileName))
+                {
+                    Console.WriteLine($"on écrase le fichier :  {fileName} ");
+
+                    using (var fileStream = File.CreateText(pathAndFileName))
+                    {
+                        var infoData = from d in data select d;
+                        foreach (var item in infoData)
+                        {
+                            fileStream.WriteLine(item.ToString());
+                            pendingWriteFile().Wait();
+                        }
+
+                    }
+
+                }
+
+
             }
            
 
           
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
+        static async Task writeAndSaveDataInFile()
+        {
+            await Task.Run(() =>saveDataInFile());
+           
+        }
+
+        static async Task pendingWriteFile()
+        {
+            await Task.Run(()=>Console.WriteLine("Ecriture du fichier en cours.."));
+        }
 
     }
 }
