@@ -179,20 +179,7 @@ namespace CslLinq
                 arrayData = (string[])entete.Clone();
 
                
-                    //entete = output.Split('\n');
-                    //if (i == 0)
-                    //{
-                  
-
-                    //    tabChaine[i] = entete[i];
-                    //    if (i == 0)
-                    //    {
-                            
-                    //        sb.AppendJoin(",", tabChaine);
-                    //        addEntete(sb, true);
-                    //        Array.Clear(tabChaine, 0, tabChaine.Length);
-                            
-                    //    }
+                    
 
                    
                         Task.Delay(100).Wait();
@@ -206,11 +193,7 @@ namespace CslLinq
 
                         var cloneArrayData = arrayData[j].Split(',');
 
-                        //if (compteur <= maxColumn)
-                        //{
-                        //    tabChaine[compteur] = arrayData[j];
-
-                        //}
+                      
                         sb.AppendJoin(",", cloneArrayData);
                         addEntete(sb, true);
 
@@ -220,11 +203,7 @@ namespace CslLinq
                     {
                         var cloneArrayData = arrayData[j].Split(',');
 
-                        //if (compteur <= maxColumn)
-                        //{
-                        //    tabChaine[compteur] = arrayData[j];
-
-                        //}
+                   
                         sb.AppendJoin(",", cloneArrayData);
                         addDataInfraction(sb, false);
                     }
@@ -232,22 +211,7 @@ namespace CslLinq
                     await getNombreOfData();
                 }
                         
-                       
 
-                        //if (compteur == maxColumn)
-                        //{
-                        //    sb.AppendJoin(",", tabChaine);
-                        //    addDataInfraction(sb, false);
-                        //    Array.Clear(tabChaine, 0, tabChaine.Length);
-                        //    compteur = 0;
-                        //    //
-                        //}
-                    
-                       
-                    
-
-                    
-                
 
             }
         }
