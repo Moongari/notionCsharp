@@ -6,6 +6,7 @@ using System.Net;
 using System.Net.Http;
 using System.Runtime.InteropServices;
 using System.Text;
+using System.Text.Json;
 using System.Threading.Tasks;
 
 namespace CslLinq
@@ -153,7 +154,7 @@ namespace CslLinq
             pourcentage = pourcentage / iValeur;
             await Task.Run(() => 
             {
-               Console.WriteLine($"{pourcentage.ToString("0.00")} %");
+               Console.WriteLine($"-- {pourcentage.ToString("0.00")} %");
 
 
             });
@@ -177,7 +178,7 @@ namespace CslLinq
                 
                 entete = output.Split(',');
                 arrayData = (string[])entete.Clone();
-
+                RadarInfraction radar = new RadarInfraction();
                
                     
 
@@ -202,8 +203,28 @@ namespace CslLinq
                     else
                     {
                         var cloneArrayData = arrayData[j].Split(',');
+                        try
+                        {
+                            radar.departement = Int32.Parse(cloneArrayData[0]);
+                            radar.dateMiseEnService = cloneArrayData[1];
+                            radar.voie = cloneArrayData[2];
+                            radar.sensCirculation = cloneArrayData[3];
+                            radar.nbreInfraction = Int32.Parse(cloneArrayData[4]);
 
-                   
+                            string jsonString = JsonSerializer.Serialize(radar);
+
+                            await writeJsonFile(jsonString);
+                        }
+                        catch (ArgumentNullException ex)
+                        {
+
+                            Console.WriteLine($"{ex.Message}");
+                        }
+                      
+
+
+
+                     
                         sb.AppendJoin(",", cloneArrayData);
                         addDataInfraction(sb, false);
                     }
@@ -323,11 +344,51 @@ namespace CslLinq
            
         }
 
+
+
+        static void saveJsonFile(string jsonString)
+        {
+            string fileName = "radarInfraction.json";
+           var pathfile =  Path.Combine(path, fileName);
+
+
+            try
+            {
+                if (!File.Exists(pathfile))
+                {
+
+                    File.WriteAllText(pathfile, jsonString);
+                }
+                else
+                {
+                    File.AppendAllText(pathfile, jsonString);
+                }
+            }
+            catch (UnauthorizedAccessException ex)
+            {
+
+                Console.WriteLine($"{ex.Message}"); ;
+            }
+          
+
+           
+        }
+
         static async Task pendingWriteFile()
         {
             Task.Delay(20).Wait();
             await Task.Run(()=>Console.Write("."));
         }
+
+
+        static async Task writeJsonFile(string jsonfile)
+        {
+            await Task.Run(() => saveJsonFile(jsonfile));
+        }
+
+
+
+
 
     }
 }
