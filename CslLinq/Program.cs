@@ -345,7 +345,10 @@ namespace CslLinq
         }
 
 
-
+        /// <summary>
+        /// Save a json file serialize
+        /// </summary>
+        /// <param name="jsonString"></param>
         static void saveJsonFile(string jsonString)
         {
             string fileName = "radarInfraction.json";
@@ -373,14 +376,21 @@ namespace CslLinq
 
            
         }
-
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
         static async Task pendingWriteFile()
         {
             Task.Delay(20).Wait();
             await Task.Run(()=>Console.Write("."));
         }
 
-
+        /// <summary>
+        /// appel asynchrone save jsonFile
+        /// </summary>
+        /// <param name="jsonfile"></param>
+        /// <returns></returns>
         static async Task writeJsonFile(string jsonfile)
         {
             await Task.Run(() => saveJsonFile(jsonfile));
