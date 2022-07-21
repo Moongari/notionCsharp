@@ -13,7 +13,7 @@ namespace CslLinq
 {
     internal class Program
     {
-        private static bool isOk =false;
+       
 
         public delegate void delSuperieur(Personne p);
         public delegate void delquestionUser(string message);
