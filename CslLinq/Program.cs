@@ -22,6 +22,7 @@ namespace CslLinq
         private const string URL_RadarInfration = "https://www.data.gouv.fr/fr/datasets/r/1beaa1a9-1356-4884-afd9-aee8c4338a35";
 
         private static string[] entete;
+        private static string[] arrayData;
         private static List<string> enteList = new List<string>();
         private static List<string> data = new List<string>();
         private static  int compteur = 0;
@@ -29,7 +30,7 @@ namespace CslLinq
         private static StringBuilder sb = new StringBuilder();
         
         private static int tailleEntete = 5;
-        private static int maxColumn = 4;
+        private static int maxColumn = 5;
         private static string[] tabChaine = new string[tailleEntete];
         private static string path = "out";
         private static string fileName = "RadarInfraction.csv";
@@ -57,7 +58,7 @@ namespace CslLinq
 
         public static void endSynchronousMessage()
         {
-            Console.WriteLine("Chargement des données Terminé.....");
+            Console.WriteLine("\r\n Data loading completed !");
         }
 
         static void showData()
@@ -147,12 +148,12 @@ namespace CslLinq
         static async Task getNombreOfData()
         {
             var numbeOFLine = data.Count();
-            int iValeur = entete.Length/4;
+            int iValeur = arrayData.Length;
             double pourcentage = (numbeOFLine * 100) ;
             pourcentage = pourcentage / iValeur;
             await Task.Run(() => 
             {
-               Console.WriteLine($"number of line insert : {numbeOFLine} => progression : {pourcentage.ToString("0")} %");
+               Console.WriteLine($"{pourcentage.ToString("0.00")} %");
 
 
             });
@@ -175,56 +176,78 @@ namespace CslLinq
                 entete = new string[tailleEntete];
                 
                 entete = output.Split(',');
-              
+                arrayData = (string[])entete.Clone();
 
-                for (int i = 0; i < entete.Length; i++)
+               
+                    //entete = output.Split('\n');
+                    //if (i == 0)
+                    //{
+                  
+
+                    //    tabChaine[i] = entete[i];
+                    //    if (i == 0)
+                    //    {
+                            
+                    //        sb.AppendJoin(",", tabChaine);
+                    //        addEntete(sb, true);
+                    //        Array.Clear(tabChaine, 0, tabChaine.Length);
+                            
+                    //    }
+
+                   
+                        Task.Delay(100).Wait();
+                        arrayData = output.Split('\n');
+
+
+                for (int j = 0; j < arrayData.Length; j++)
                 {
-                    if (i == 0)
+                    if (j == 0)
                     {
-                        entete = output.Split('\n');
 
-                        tabChaine[i] = entete[i];
-                        if (i == 0)
-                        {
-                            
-                            sb.AppendJoin(",", tabChaine);
-                            addEntete(sb, true);
-                            Array.Clear(tabChaine, 0, tabChaine.Length);
-                            
-                        }
+                        var cloneArrayData = arrayData[j].Split(',');
+
+                        //if (compteur <= maxColumn)
+                        //{
+                        //    tabChaine[compteur] = arrayData[j];
+
+                        //}
+                        sb.AppendJoin(",", cloneArrayData);
+                        addEntete(sb, true);
+
 
                     }
                     else
                     {
-                        Task.Delay(10).Wait();
+                        var cloneArrayData = arrayData[j].Split(',');
 
-                        entete = entete[i].Split(',');
+                        //if (compteur <= maxColumn)
+                        //{
+                        //    tabChaine[compteur] = arrayData[j];
 
-                        for (int j = 0; j < entete.Length; j++)
-                        {
-                            if (compteur < maxColumn)
-                            {
-                                tabChaine[compteur] = entete[j];
-
-                            }
-                        }
-
-                       
-
-                        if (compteur == maxColumn-1)
-                        {
-                            sb.AppendJoin(",", tabChaine);
-                            addDataInfraction(sb, false);
-                            Array.Clear(tabChaine, 0, tabChaine.Length);
-                            compteur = 0;
-                            await getNombreOfData();
-                        }
-                    
-                        compteur++;
+                        //}
+                        sb.AppendJoin(",", cloneArrayData);
+                        addDataInfraction(sb, false);
                     }
 
-                    
+                    await getNombreOfData();
                 }
+                        
+                       
+
+                        //if (compteur == maxColumn)
+                        //{
+                        //    sb.AppendJoin(",", tabChaine);
+                        //    addDataInfraction(sb, false);
+                        //    Array.Clear(tabChaine, 0, tabChaine.Length);
+                        //    compteur = 0;
+                        //    //
+                        //}
+                    
+                       
+                    
+
+                    
+                
 
             }
         }
@@ -282,11 +305,11 @@ namespace CslLinq
             if (!Directory.Exists(path))
             {
                 Directory.CreateDirectory(path);
-                Console.WriteLine("creation du répertoire");
+                Console.WriteLine("Create directory : " + path);
                 if (!File.Exists(pathAndFileName))
                 {
-                    Console.WriteLine($"Création du fichier  {fileName} ");
-
+                    Console.WriteLine($"Create file :  {fileName} ");
+                    Console.WriteLine("Writing the file in progress.");
                     using (var fileStream = File.CreateText(pathAndFileName))
                     {
                         var infoData = from d in data select d;
@@ -304,8 +327,8 @@ namespace CslLinq
             {
                 if (File.Exists(pathAndFileName))
                 {
-                    Console.WriteLine($"on écrase le fichier :  {fileName} ");
-
+                    Console.WriteLine($"delete file :  {fileName} ");
+                    Console.WriteLine("Writing the file in progress.");
                     using (var fileStream = File.CreateText(pathAndFileName))
                     {
                         var infoData = from d in data select d;
@@ -338,7 +361,8 @@ namespace CslLinq
 
         static async Task pendingWriteFile()
         {
-            await Task.Run(()=>Console.WriteLine("Ecriture du fichier en cours.."));
+            Task.Delay(20).Wait();
+            await Task.Run(()=>Console.Write("."));
         }
 
     }
