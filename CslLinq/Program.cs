@@ -35,7 +35,8 @@ namespace CslLinq
         private static string[] tabChaine = new string[tailleEntete];
         private static string path = "out";
         private static string fileName = "RadarInfraction.csv";
-
+        private static string fileNameJson = "radarInfraction.json";
+        private static string pathfile;
 
         static async Task Main(string[] args)
         {
@@ -47,11 +48,20 @@ namespace CslLinq
             await GetUrlAsyncRadarInfraction();
 
             await writeAndSaveDataInFile();
+            await readJsonfile();
+
             //await getNombreOfData();
             endSynchronousMessage();
+            
             // showData();
             Console.ReadLine();
         }
+
+        public static async Task readJsonfile()
+        {
+            await Task.Run(() => readJsonFile());
+        }
+
         public static void startSynchronousMessage()
         {
             Console.WriteLine("Starting program......");
@@ -205,19 +215,27 @@ namespace CslLinq
                         var cloneArrayData = arrayData[j].Split(',');
                         try
                         {
-                            radar.departement = Int32.Parse(cloneArrayData[0]);
-                            radar.dateMiseEnService = cloneArrayData[1];
-                            radar.voie = cloneArrayData[2];
-                            radar.sensCirculation = cloneArrayData[3];
-                            radar.nbreInfraction = Int32.Parse(cloneArrayData[4]);
+                            if(arrayData[j].Length > 0)
+                            {
+                                radar.departement = Int32.Parse(cloneArrayData[0]);
+                                radar.dateMiseEnService = cloneArrayData[1];
+                                radar.voie = cloneArrayData[2];
+                                radar.sensCirculation = cloneArrayData[3];
+                                radar.nbreInfraction = Int32.Parse(cloneArrayData[4]);
 
-                            string jsonString = JsonSerializer.Serialize(radar);
+                                string jsonString = JsonSerializer.Serialize(radar);
 
-                            await writeJsonFile(jsonString);
+                                await writeJsonFile(jsonString);
+                            }
+                           
                         }
                         catch (ArgumentNullException ex)
                         {
 
+                            Console.WriteLine($"{ex.Message}");
+                        }
+                        catch (FormatException ex)
+                        {
                             Console.WriteLine($"{ex.Message}");
                         }
                       
@@ -326,6 +344,22 @@ namespace CslLinq
                     }
 
                 }
+                else
+                {
+                    Console.WriteLine($"Create file :  {fileName} ");
+                    Console.WriteLine("Writing the file in progress.");
+                    using (var fileStream = File.CreateText(pathAndFileName))
+                    {
+                        var infoData = from d in data select d;
+                        foreach (var item in infoData)
+                        {
+                            fileStream.WriteLine(item.ToString());
+                            pendingWriteFile().Wait();
+                        }
+
+                    }
+                }
+                      
 
 
             }
@@ -351,15 +385,15 @@ namespace CslLinq
         /// <param name="jsonString"></param>
         static void saveJsonFile(string jsonString)
         {
-            string fileName = "radarInfraction.json";
-           var pathfile =  Path.Combine(path, fileName);
 
+            Directory.CreateDirectory(path);
+            pathfile = Path.Combine(path, fileNameJson);
 
             try
             {
                 if (!File.Exists(pathfile))
                 {
-
+                    
                     File.WriteAllText(pathfile, jsonString);
                 }
                 else
@@ -397,7 +431,22 @@ namespace CslLinq
         }
 
 
+        static void readJsonFile()
+        {
+            pathfile = Path.Combine(path, fileNameJson);
 
+            if (File.Exists(pathfile))
+            {
+                Console.WriteLine(File.ReadAllText(pathfile));
+                
+            }
+            else
+            {
+                Console.WriteLine($"{pathfile}, do not found this file ");
+            }
+           
+
+        }
 
 
     }
