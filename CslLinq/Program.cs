@@ -51,10 +51,25 @@ namespace CslLinq
             Console.WriteLine("------------Result Struct ----------");
             Console.WriteLine(ps1.Equals(ps2));
 
+            Console.WriteLine("------------Result Record ----------");
+            var personne1 = new PersonneRecord() { name = "Tata", age = 45 };
+            // avec le mot clé with on peut cloner l'objet Personne1 et lui donner de nouvelles valeurs
+            var personne2 = personne1 with { name = "Thomas" }; 
+
+
+
+            personne1.affiche();
+            personne2.affiche();    
+
+            Console.WriteLine(personne1.Equals(personne2));
+
+
         }
 
 
-
+        /// <summary>
+        /// Struct
+        /// </summary>
         public struct PersonneStruct
         {
             public  string name { get; set; }
@@ -68,6 +83,23 @@ namespace CslLinq
             }
         }
 
+        // les records permettent d'avoir la souplesse d'une struct et la puissance d'une classe
+        
 
+        /// <summary>
+        /// Record passage par reference comme une classe
+        /// </summary>
+        record PersonneRecord()
+        {
+            public string name { get; set; }
+            public int age { get; set; }
+
+
+
+            public void affiche()
+            {
+                Console.WriteLine($" Name : {name}  Age : {age} ans");
+            }
+        }
     }
 }
