@@ -52,20 +52,61 @@ namespace CslLinq
             Console.WriteLine(ps1.Equals(ps2));
 
             Console.WriteLine("------------Result Record ----------");
-            var personne1 = new PersonneRecord() { name = "Tata", age = 45 };
+            var personne1 = new PersonneRecord("Tata", 45);
             // avec le mot clé with on peut cloner l'objet Personne1 et lui donner de nouvelles valeurs
-            var personne2 = personne1 with { name = "Thomas" }; 
+            var personne2 = personne1 with {};
 
 
+            // utilisation du deconstructeur
+
+            var (name, age) = personne1;
 
             personne1.affiche();
-            personne2.affiche();    
+            personne2.affiche();
 
-            Console.WriteLine(personne1.Equals(personne2));
+        
+            Console.WriteLine("nom : "+ name);
+            Console.WriteLine("nom : " + age);
 
+            var personnage1 = new AffichePersonnage(34, "Guerrier");
+            var personnage2 = new AffichePersonnage(40, "Magicien");
+            var personnage3 = new AffichePersonnage(58, "Chevalier");
+            var personnage4 = new AffichePersonnage(23, "Fantassin");
+
+            personnage1.MostStronger(personnage1, personnage2);
+            personnage2.MostStronger(personnage1, personnage3);
+            personnage3.MostStronger(personnage1, personnage4);
+
+                
 
         }
 
+        //utilisation simplifier d'un record les données sont immutables
+        record personnage(int force, string role);
+        record AffichePersonnage: personnage
+        {
+            public AffichePersonnage(int force,string role) : base(force,role)
+            {
+               
+            }
+
+            public void Description()
+            {
+                Console.WriteLine($" FORCE = {force} , Role = {role}");
+            }
+
+            public void MostStronger(AffichePersonnage p1, AffichePersonnage p2)
+            {
+                if(p1.force > p2.force)
+                {
+                    Console.WriteLine($"{p1.role} est plus fort que {p2.role}");
+                }
+                else
+                {
+                    Console.WriteLine($"{p2.role} est plus fort que {p1.role}");
+                }
+            }
+        }
 
         /// <summary>
         /// Struct
@@ -89,17 +130,36 @@ namespace CslLinq
         /// <summary>
         /// Record passage par reference comme une classe
         /// </summary>
-        record PersonneRecord()
+        record PersonneRecord
         {
             public string name { get; set; }
             public int age { get; set; }
 
+            /// <summary>
+            /// constructeur de l'objet Record
+            /// </summary>
+            /// <param name="nom"></param>
+            /// <param name="age"></param>
+            public PersonneRecord(string nom, int age)
+            {
+                this.name = nom;
+                this.age = age;
+            }
+
+            //Deconstructeur de l'objet Record
+            public void Deconstruct(out string nom, out int age)
+            {
+                nom =this.name;
+                age =this.age;
+            }
 
 
             public void affiche()
             {
                 Console.WriteLine($" Name : {name}  Age : {age} ans");
             }
+
+          
         }
     }
 }
