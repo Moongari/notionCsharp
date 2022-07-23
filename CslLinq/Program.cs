@@ -135,8 +135,8 @@ namespace CslLinq
         /// </summary>
         record PersonneRecord
         {
-            public string name { get; set; }
-            public int age { get; set; }
+            public string name { get; init; }
+            public int age { get; init; }
 
             /// <summary>
             /// constructeur de l'objet Record
