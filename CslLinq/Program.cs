@@ -57,6 +57,10 @@ namespace CslLinq
             Console.ReadLine();
         }
 
+        /// <summary>
+        /// Read json file asynchrone 
+        /// </summary>
+        /// <returns></returns>
         public static async Task readJsonfile()
         {
             await Task.Run(() => readJsonFile());
