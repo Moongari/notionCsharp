@@ -83,6 +83,9 @@ namespace CslLinq
 
         //utilisation simplifier d'un record les données sont immutables
         record personnage(int force, string role);
+        /// <summary>
+        /// Heritage dans les records
+        /// </summary>
         record AffichePersonnage: personnage
         {
             public AffichePersonnage(int force,string role) : base(force,role)
