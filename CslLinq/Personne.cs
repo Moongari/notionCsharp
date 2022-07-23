@@ -62,5 +62,28 @@ namespace CslLinq
         
         }
 
+
+        /// <summary>
+        /// Redefinition de la method equals de l'objet Personne
+        /// </summary>
+        /// <param name="obj"></param>
+        /// <returns></returns>
+        public override bool Equals(object obj)
+        {
+            Personne other = obj as Personne;
+            if(other!= null)
+            {
+                if (other.name.Equals(name) && other.age.Equals(age) && other.city.Equals(city) && other.country.Equals(country))
+                {
+                    return true;
+                }
+                else
+                {
+                    return false;
+                }
+            }
+          return false;
+        }
+
     }
 }

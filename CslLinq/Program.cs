@@ -9,11 +9,11 @@ namespace CslLinq
 
         public delegate void delSuperieur(Personne p);
         public delegate void delquestionUser(string message);
-    
+
         static void Main(string[] args)
         {
 
-            
+
             IList<Personne> personnlist = new List<Personne>();
 
             personnlist.Add(new Personne("Robert", 13, "Oxford", "England"));
@@ -25,106 +25,48 @@ namespace CslLinq
             personnlist.Add(new Personne("Francoise", 78, "Bouzole", "France"));
             personnlist.Add(new Personne("Mohamed", 45, "Damparis", "France"));
 
-            Personne p = new Personne("Robert", 23, "Oxford", "England");
+            Personne p1 = new Personne("Robert", 23, "Oxford", "England");
+            Personne p2 = new Personne("Robert", 24, "Oxford", "England");
 
-            //Delegate Action....
-            Action<Personne> delSuperieurAction = p.isBiggerOfPersonne;
-
-           // declaration du delegate
-            delSuperieur delSuperieur = new delSuperieur(p.isBiggerOfPersonne);
-            // on recupere la liste des personnes dont l'age est superieur a 0
-            var listPers =  personnlist.Where(p => p.age > 0).ToList();
-
-            Console.WriteLine("-------------------------- Action ---------------------------------");
-            foreach (Personne p1 in listPers)
-            {
-                //delSuperieur(p1);
-                delSuperieurAction(p1);
-            }
-
-            Console.WriteLine("--------------------------delegate appel method---------------------------------");
-            delquestionUser delquestionUser = questionUtilisateur;
-            //delquestionUser("Veuillez indiquer votre nom ?");
-            //delquestionUser = questionUtilisateurAge;
-            //delquestionUser("Veuillez saisir votre age?");
-
-
-            Console.WriteLine("--------------------------PREDICATE---------------------------------");
-            Predicate<int> verifAge = s => s > 23;
-
-                Random rnd = new Random();
-                var valeur =  rnd.Next(10, 45);
-
-            if (verifAge(valeur))
-            {
-                Console.WriteLine($"Valeur valid : {valeur}");
+            Console.WriteLine("------------Result class ----------");
+            // comparaison par référence
+            if (p1.Equals(p2))
+                {
+                Console.WriteLine(p1.Equals(p2));
             }
             else
             {
-                Console.WriteLine($"Valeur invalid : {valeur}");
+                Console.WriteLine(p1.Equals(p2));
             }
-            Console.WriteLine("--------------------------Func---------------------------------");
 
-            Func<int, int, int> calc = addition;
+            // comparaison de 2 valeur avec une struct
 
-            Console.WriteLine($"Resultat de l'addition : {calc(valeur, valeur)}");
+            PersonneStruct ps1 = new PersonneStruct();
+            PersonneStruct ps2 = new PersonneStruct();
+
+            ps1.name = "ALbert"; ps1.age = 34;
+            ps2.name = "ALbert"; ps2.age = 23;
+
+            // comparaison par valeur
+            Console.WriteLine("------------Result Struct ----------");
+            Console.WriteLine(ps1.Equals(ps2));
 
         }
 
 
 
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="message"></param>
-        static public void questionUtilisateur(string message)
+        public struct PersonneStruct
         {
+            public  string name { get; set; }
+            public  int age { get; set; }
 
-            Console.WriteLine(message);
-            var result = Console.ReadLine();
 
-            if (result != null)
+
+            public void affiche()
             {
-                Console.WriteLine($"votre nom est : {result}");
+                Console.WriteLine($" Name : {name}  Age : {age} ans");
             }
-
         }
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="message"></param>
-        static public void questionUtilisateurAge(string message)
-        {
-            int age = 0;
-            Console.WriteLine(message);
-            var result = Console.ReadLine();
-
-            bool isValidAge =  int.TryParse(result, out age);
-            if (result != null )
-            {
-                if(age > 18)
-                {
-                    Console.WriteLine("Vous etes majeur ");
-                    Console.WriteLine($"votre age est  : {age} ans");
-                    Console.WriteLine("Autorisation valider ");
-                }
-                else
-                {
-                    Console.WriteLine("Vous etes mineur ,autorisation refuser ");
-                }
-               
-            }
-
-        }
-
-
-        static public int addition(int val,int val2)
-        {
-            return val + val2;
-        }
-
-
-
 
 
     }
