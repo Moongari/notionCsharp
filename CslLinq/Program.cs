@@ -44,13 +44,13 @@ namespace CslLinq
 
             Console.WriteLine("--------------------------delegate appel method---------------------------------");
             delquestionUser delquestionUser = questionUtilisateur;
-            //delquestionUser("Veuillez indiquer votre nom ?");
-            //delquestionUser = questionUtilisateurAge;
-            //delquestionUser("Veuillez saisir votre age?");
+            delquestionUser("Veuillez indiquer votre nom ?");
+            delquestionUser = questionUtilisateurAge;
+            delquestionUser("Veuillez saisir votre age?");
 
 
             Console.WriteLine("--------------------------PREDICATE---------------------------------");
-            Predicate<int> verifAge = s => s > 23;
+            Predicate<int> verifAge = s => s > 13;
 
                 Random rnd = new Random();
                 var valeur =  rnd.Next(10, 45);
@@ -63,11 +63,15 @@ namespace CslLinq
             {
                 Console.WriteLine($"Valeur invalid : {valeur}");
             }
+
             Console.WriteLine("--------------------------Func---------------------------------");
 
             Func<int, int, int> calc = addition;
 
             Console.WriteLine($"Resultat de l'addition : {calc(valeur, valeur)}");
+
+
+            Console.ReadKey();
 
         }
 
@@ -100,7 +104,11 @@ namespace CslLinq
             var result = Console.ReadLine();
 
             bool isValidAge =  int.TryParse(result, out age);
-            if (result != null )
+            if (!isValidAge)
+            {
+                Console.WriteLine("Vous n'avez pas saisi de valeur correct !");
+            }
+            if (result != null && isValidAge)
             {
                 if(age > 18)
                 {
@@ -125,7 +133,7 @@ namespace CslLinq
 
 
 
-
+        
 
     }
 }
