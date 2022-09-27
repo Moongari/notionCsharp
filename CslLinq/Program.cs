@@ -9,6 +9,7 @@ namespace CslLinq
 
         public delegate void delSuperieur(Personne p);
         public delegate void delquestionUser(string message);
+        public delegate void delquestionUserAge(string message, int age);
     
         static void Main(string[] args)
         {
@@ -48,6 +49,11 @@ namespace CslLinq
             delquestionUser = questionUtilisateurAge;
             delquestionUser("Veuillez saisir votre age?");
 
+            delquestionUserAge delquestionUserAge = questionUtilisateurAge;
+            delquestionUser("Veuillez indiquez votre nom ?");
+          
+            delquestionUserAge = questionUtilisateurAge;
+            delquestionUser("Veuillez saisir votre age?");
 
             Console.WriteLine("--------------------------PREDICATE---------------------------------");
             Predicate<int> verifAge = s => s > 13;
@@ -69,6 +75,18 @@ namespace CslLinq
             Func<int, int, int> calc = addition;
 
             Console.WriteLine($"Resultat de l'addition : {calc(valeur, valeur)}");
+
+
+            Console.WriteLine("--------------------------REF vs OUT ---------------------------------");
+
+            int i = 0;
+            Console.WriteLine("Previous value of integer i:" + i.ToString());
+            string test = GetNextName(ref i);
+            Console.WriteLine("Current value of integer i:" + i.ToString());
+
+            Console.WriteLine("Previous value of integer i:" + i.ToString());
+            string test2 = GetNextNameByOut(out i);
+            Console.WriteLine("Current value of integer i:" + i.ToString());
 
 
             Console.ReadKey();
@@ -125,6 +143,32 @@ namespace CslLinq
 
         }
 
+        static public void questionUtilisateurAge(string message, int age)
+        {
+            Console.WriteLine(message);
+            var result = Console.ReadLine();
+
+            bool isValidAge = int.TryParse(result, out age);
+            if (!isValidAge)
+            {
+                Console.WriteLine("Vous n'avez pas saisi de valeur correct !");
+            }
+            if (result != null && isValidAge)
+            {
+                if (age > 18)
+                {
+                    Console.WriteLine("Vous etes majeur ");
+                    Console.WriteLine($"votre age est  : {age} ans");
+                    Console.WriteLine("Autorisation valider ");
+                }
+                else
+                {
+                    Console.WriteLine("Vous etes mineur ,autorisation refuser ");
+                }
+
+            }
+        }
+
 
         static public int addition(int val,int val2)
         {
@@ -133,7 +177,19 @@ namespace CslLinq
 
 
 
-        
+        public static string GetNextName(ref int id)
+        {
+            string returnText = "Next-" + id.ToString();
+            id += 1;
+            return returnText;
+        }
+
+        public static string GetNextNameByOut(out int id)
+        {
+            id = 1;
+            string returnText = "Next-" + id.ToString();
+            return returnText;
+        }
 
     }
 }

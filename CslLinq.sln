@@ -3,7 +3,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.1.32328.378
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CslLinq", "CslLinq\CslLinq.csproj", "{252F336A-C46E-4CD2-877A-D3EDB83550F4}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CslLinq", "CslLinq\CslLinq.csproj", "{252F336A-C46E-4CD2-877A-D3EDB83550F4}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ExtensionMethod", "ExtensionMethod\ExtensionMethod.csproj", "{FE9ED2A7-EC14-403C-AC4D-D5C8F62BADE4}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -15,6 +17,10 @@ Global
 		{252F336A-C46E-4CD2-877A-D3EDB83550F4}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{252F336A-C46E-4CD2-877A-D3EDB83550F4}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{252F336A-C46E-4CD2-877A-D3EDB83550F4}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FE9ED2A7-EC14-403C-AC4D-D5C8F62BADE4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FE9ED2A7-EC14-403C-AC4D-D5C8F62BADE4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FE9ED2A7-EC14-403C-AC4D-D5C8F62BADE4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FE9ED2A7-EC14-403C-AC4D-D5C8F62BADE4}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
