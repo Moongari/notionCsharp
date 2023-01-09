@@ -10,9 +10,12 @@ namespace ExtensionMethod
     public static class SecondClass
     {
 
+        
+
         public static void Test3(this FirstClass O)
         {
-            Console.WriteLine("Method Three");
+            var solde = O.getSolde();
+            Console.WriteLine("Method Three get solde by First Class" + solde);
         }
 
         public static void Test4(this FirstClass O,int x)
@@ -20,10 +23,14 @@ namespace ExtensionMethod
             Console.WriteLine("Method Four" + x);
         }
 
-        public static void Test5(this FirstClass O)
+        public static void Test5(this FirstClass firstClass)
         {
-            Console.WriteLine("Method Five"+ O.x);
+            firstClass.solde= 300;
+            Console.WriteLine("Method Five "+ firstClass.getSolde());
         }
+
+
+        
 
     }
 }

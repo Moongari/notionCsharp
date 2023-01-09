@@ -8,3 +8,4 @@ FirstClass first = new FirstClass();
     first.Test3();
     first.Test4(200);
     first.Test5();
+    first.ShowSalary();
